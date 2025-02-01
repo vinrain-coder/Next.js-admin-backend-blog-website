@@ -15,10 +15,10 @@ export default function Draft() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
-  // Only set mounted to true after the component has mounted on the client side
   useEffect(() => {
     setMounted(true);
-    if (status !== "loading" && !session) {
+    if (status === "loading") return; // Don't redirect while loading
+    if (!session) {
       router.push("/login");
     }
   }, [session, status, router]);

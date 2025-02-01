@@ -15,7 +15,6 @@ export default function Blogs() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
-  // Ensure session is checked only after the component has mounted on the client side
   useEffect(() => {
     setMounted(true);
     if (status === "loading") return; // Don't redirect while loading
