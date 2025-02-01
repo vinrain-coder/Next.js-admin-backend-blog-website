@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -14,20 +16,20 @@ export default function Blogs() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const perpage = 10;
 
   useEffect(() => {
     setMounted(true);
-    if (status === "loading") return; // Don't redirect while loading
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.replace("/login"); // Use replace to prevent back navigation
     }
   }, [status, router]);
 
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
-  // Handle errors when data fails to load
   if (error) {
-    console.error("Error fetching data:", error.message); // Log error to debug
     return (
       <div>
         <h2>Failed to load data</h2>
@@ -36,7 +38,6 @@ export default function Blogs() {
     );
   }
 
-  // Render loading state if session or data is not yet available
   if (!mounted || status === "loading" || !alldata) {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
@@ -46,16 +47,8 @@ export default function Blogs() {
     );
   }
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [perpage] = useState(10);
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const publishedBlogs = alldata?.filter((ab) => ab.status === "publish") || [];
-
+  const publishedBlogs =
+    alldata?.filter((blog) => blog.status === "publish") || [];
   const filteredBlogs =
     searchQuery.trim() === ""
       ? publishedBlogs
@@ -67,13 +60,8 @@ export default function Blogs() {
   const indexOfFirstBlog = indexOfLastBlog - perpage;
   const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
-  const totalBlogs = filteredBlogs.length;
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(totalBlogs / perpage); i++) {
-    pageNumbers.push(i);
-  }
+  const totalPages = Math.ceil(filteredBlogs.length / perpage);
 
-  // Reset page to 1 when search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
@@ -81,7 +69,7 @@ export default function Blogs() {
   return (
     <>
       <Head>
-        <title>Published blogs</title>
+        <title>Published Blogs</title>
       </Head>
       <div className="blogpage">
         <div className="titledashboard flex flex-sb">
@@ -108,13 +96,13 @@ export default function Blogs() {
         </div>
 
         <div className="blogstable">
-          <table className="table teble-styling" data-aos="fade-up">
+          <table className="table table-styling" data-aos="fade-up">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Title</th>
                 <th>Slug</th>
-                <th>Edit / Delete</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -134,23 +122,15 @@ export default function Blogs() {
                 currentBlogs.map((blog, index) => (
                   <tr key={blog._id}>
                     <td>{indexOfFirstBlog + index + 1}</td>
-                    <td>
-                      <h3>{blog.title}</h3>
-                    </td>
-                    <td>
-                      <pre>{blog.slug}</pre>
-                    </td>
+                    <td>{blog.title}</td>
+                    <td>{blog.slug}</td>
                     <td>
                       <div className="flex gap-2 flex-center">
                         <Link href={`/blogs/edit/${blog._id}`}>
-                          <button title="edit">
-                            <FaEdit />
-                          </button>
+                          <FaEdit title="Edit" />
                         </Link>
                         <Link href={`/blogs/delete/${blog._id}`}>
-                          <button title="delete">
-                            <RiDeleteBin6Fill />
-                          </button>
+                          <RiDeleteBin6Fill title="Delete" />
                         </Link>
                       </div>
                     </td>
@@ -162,23 +142,23 @@ export default function Blogs() {
 
           <div className="blogpagination">
             <button
-              onClick={() => paginate(currentPage - 1)}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
             >
               Previous
             </button>
-            {pageNumbers.map((number) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
               <button
-                key={number}
-                onClick={() => paginate(number)}
-                className={currentPage === number ? "active" : ""}
+                key={num}
+                onClick={() => setCurrentPage(num)}
+                className={currentPage === num ? "active" : ""}
               >
-                {number}
+                {num}
               </button>
             ))}
             <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={currentPage >= pageNumbers.length}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage >= totalPages}
             >
               Next
             </button>
