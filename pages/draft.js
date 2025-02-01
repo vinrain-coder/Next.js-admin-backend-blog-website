@@ -81,16 +81,13 @@ export default function DraftBlogs() {
           <div className="blogstable">
             <div className="flex gap-2 mb-1" data-aos="fade-up">
               <h2>Search draft blogs</h2>
-
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search draft blogs"
-                className="search-input"
               />
             </div>
-            <div className="blogstable">
               <table className="table table-styling" data-aos="fade-up">
                 <thead>
                   <tr>
@@ -164,7 +161,6 @@ export default function DraftBlogs() {
               </div>
             </div>
           </div>
-        </div>
       </>
     );
   }

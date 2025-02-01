@@ -17,7 +17,7 @@ export default function Blogs() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const perpage = 3;
+  const perpage = 10;
 
   useEffect(() => {
     if (!session) {
@@ -81,16 +81,14 @@ export default function Blogs() {
           <div className="blogstable">
             <div className="flex gap-2 mb-1" data-aos="fade-up">
               <h2>Search blogs</h2>
-
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search blogs"
-                className="blogstable input"
               />
             </div>
-            <div className="blogstable">
+
               <table className="table table-styling" data-aos="fade-up">
                 <thead>
                   <tr>
@@ -164,7 +162,6 @@ export default function Blogs() {
               </div>
             </div>
           </div>
-        </div>
       </>
     );
   }
