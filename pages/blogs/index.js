@@ -42,7 +42,7 @@ export default function Blogs() {
   };
 
   // Filter published blogs
-  const publishedBlogs = alldata.filter((ab) => ab.status === "publish");
+  const publishedBlogs = alldata?.filter((ab) => ab.status === "publish") || [];
 
   // Filter blogs based on the search query
   const filteredBlogs =
