@@ -4,33 +4,26 @@ import { useEffect, useState } from "react";
 function useFetchData(apiEndPoint) {
   const [alldata, setAlldata] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    if (initialLoad) {
-      setInitialLoad(false);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
+    // Do nothing if there's no endpoint
+    if (!apiEndPoint) return;
 
     const fetchAllData = async () => {
+      setLoading(true); // Set loading to true when starting the fetch
       try {
         const res = await axios.get(apiEndPoint);
         const alldata = res.data;
         setAlldata(alldata);
-        setLoading(false);
       } catch (error) {
-        console.log("Error fetching blog data", error);
-        setLoading(false);
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Set loading to false when done
       }
     };
 
-    if (apiEndPoint) {
-      fetchAllData();
-    }
-  }, [initialLoad, apiEndPoint]);
+    fetchAllData();
+  }, [apiEndPoint]); // Dependency on apiEndPoint to refetch when it changes
 
   return { alldata, loading };
 }
