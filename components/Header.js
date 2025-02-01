@@ -1,3 +1,5 @@
+"use client";
+
 import { RiBarChartHorizontalLine } from "react-icons/ri";
 import { GoScreenFull } from "react-icons/go";
 import { BiExitFullscreen } from "react-icons/bi";

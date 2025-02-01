@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { IoHome, IoSettingsOutline } from "react-icons/io5";
 import { BiPodcast } from "react-icons/bi";
