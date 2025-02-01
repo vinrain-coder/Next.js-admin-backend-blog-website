@@ -10,10 +10,14 @@ import { BiPodcast } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 
-export default function Blogs() {
+export default function draft() {
   const { data: session, status } = useSession();
-
   const router = useRouter();
+
+  if (session) {
+    router.push("/blogs");
+    return null;
+  }
 
   useEffect(() => {
     if (!session) {
@@ -21,8 +25,7 @@ export default function Blogs() {
     }
   }, [session, router]);
 
-  // Display loading state
-  if (loading) {
+  if (status === "loading") {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />
@@ -31,76 +34,52 @@ export default function Blogs() {
     );
   }
 
-  const [currentPage, setCurrentPage] = useState(1); // State for managing the current page
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // Initialize current page
+  const [perpage] = useState(4); // Set the number of blogs per page
 
-  const [perpage] = useState(4); // Number of blogs to show per page
-  const { alldata, loading } = useFetchData("/api/blogapi"); // Fetch data using the custom hook
+  const { alldata, loading } = useFetchData("/api/blogapi"); // Fetch all data using custom hook
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber); // Update the current page number
+    setCurrentPage(pageNumber); // Update the current page when a pagination button is clicked
   };
 
-  // Filter published blogs
-  const publishedBlogs = alldata.filter((ab) => ab.status === "publish");
+  // Filter draft blogs
+  const draftBlogs = alldata.filter((ab) => ab.status === "draft");
 
-  // Filter blogs based on the search query
-  const filteredBlogs =
-    searchQuery.trim() === ""
-      ? publishedBlogs // If no search query, show all published blogs
-      : publishedBlogs.filter(
-          (blog) => blog.title.toLowerCase().includes(searchQuery.toLowerCase()) // Filter blogs that match the search query
-        );
-
-  // Pagination logic for filtered blogs
+  // Calculate pagination indexes
   const indexOfLastBlog = currentPage * perpage; // Index of the last blog on the current page
   const indexOfFirstBlog = indexOfLastBlog - perpage; // Index of the first blog on the current page
-  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog); // Blogs for the current page
+  const currentBlogs = draftBlogs.slice(indexOfFirstBlog, indexOfLastBlog); // Blogs for the current page
 
-  // Calculate the total number of pages for filtered blogs
-  const totalBlogs = filteredBlogs.length; // Total number of filtered blogs
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(totalBlogs / perpage); i++) {
-    pageNumbers.push(i); // Populate page numbers array
+  // Total number of pages
+  const totalDrafts = draftBlogs.length; // Total number of draft blogs
+  const pageNumbers = []; // Array to store page numbers
+  for (let i = 1; i <= Math.ceil(totalDrafts / perpage); i++) {
+    pageNumbers.push(i);
   }
-
-  // Reset to the first page when the search query changes
-  useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 whenever the search query changes
-  }, [searchQuery]);
 
   if (session) {
     return (
       <>
         <Head>
-          <title>Published blogs</title>
+          <title>Drafted blogs</title>
         </Head>
         <div className="blogpage">
           <div className="titledashboard flex flex-sb">
             <div data-aos="fade-right">
               <h2>
-                All published <span>blogs</span>
+                All draft <span>blogs</span>
               </h2>
               <h3>ADMIN PANEL</h3>
             </div>
             <div className="breadcrumb" data-aos="fade-left">
               <BiPodcast /> <span>/</span>
-              <span>Blogs</span>
+              <span>Draft blogs</span>
             </div>
           </div>
 
-          <div className="blogstable">
-            <div className="flex gap-2 mb-1" data-aos="fade-up">
-              <h2>Search blogs</h2>
-              <input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                type="text"
-                placeholder="Search by title..."
-              />
-            </div>
-
-            <table className="table teble-styling" data-aos="fade-up">
+          <div className="blogstable" data-aos="fade-up">
+            <table className="table teble-styling">
               <thead>
                 <tr>
                   <th>#</th>
@@ -114,28 +93,30 @@ export default function Blogs() {
                   <>
                     <tr>
                       <td colSpan={4}>
-                        <Dataloading /> {/* Show loading state */}
+                        <Dataloading /> {/* Display loading state for data */}
                       </td>
                     </tr>
                   </>
                 ) : (
                   <>
-                    {currentBlogs.length === 0 ? (
+                    {currentBlogs.length === 0 ? ( // Check if there are no blogs on the current page
                       <tr>
                         <td colSpan={4} className="text-center">
-                          No published blogs
+                          No draft blogs
                         </td>
                       </tr>
                     ) : (
                       currentBlogs.map((blog, index) => (
                         <tr key={blog._id}>
-                          <td>{indexOfFirstBlog + index + 1}</td>{" "}
-                          {/* Correct numbering */}
                           <td>
-                            <h3>{blog.title}</h3>
+                            {indexOfFirstBlog + index + 1}{" "}
+                            {/* Show correct numbering */}
                           </td>
                           <td>
-                            <pre>{blog.slug}</pre>
+                            <h3>{blog.title}</h3> {/* Display blog title */}
+                          </td>
+                          <td>
+                            <pre>{blog.slug}</pre> {/* Display blog slug */}
                           </td>
                           <td>
                             <div className="flex gap-2 flex-center">
@@ -158,8 +139,8 @@ export default function Blogs() {
                 )}
               </tbody>
             </table>
-            {filteredBlogs.length === 0 ? (
-              "" // No pagination if no filtered blogs
+            {totalDrafts === 0 ? (
+              ""
             ) : (
               <div className="blogpagination">
                 <button
@@ -176,8 +157,8 @@ export default function Blogs() {
                   .map((number) => (
                     <button
                       key={number}
-                      onClick={() => paginate(number)} // Navigate to the clicked page
-                      className={`${currentPage === number ? "active" : ""}`} // Highlight the active page
+                      onClick={() => paginate(number)} // Change page on button click
+                      className={`${currentPage === number ? "active" : ""}`} // Highlight active page
                     >
                       {number}
                     </button>
