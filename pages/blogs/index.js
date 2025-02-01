@@ -23,7 +23,7 @@ export default function Blogs() {
 
   const { alldata, loading } = useFetchData("/api/blogapi");
 
-  if (loading) {
+  if (status === "loading") {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />

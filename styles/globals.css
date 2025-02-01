@@ -948,7 +948,7 @@ button {
     align-items: flex-start;
     justify-content: center;
     gap: 5rem;
-    margin-top: 3rem;
+    margin-top: 1rem;
     /* background-color: #e6e6e6; */
     background: url('/img/profile_bg.jpg') no-repeat center center/cover;
     border-radius: 35px;
