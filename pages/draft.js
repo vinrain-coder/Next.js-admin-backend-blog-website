@@ -15,6 +15,7 @@ export default function Draft() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
+  // Ensure the component is only rendered on the client side
   useEffect(() => {
     setMounted(true);
     if (status !== "loading" && !session) {
@@ -22,6 +23,7 @@ export default function Draft() {
     }
   }, [session, status, router]);
 
+  // Prevent rendering before the client-side session check is complete
   if (!mounted || status === "loading") {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
