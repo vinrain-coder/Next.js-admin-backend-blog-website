@@ -78,87 +78,90 @@ export default function Blogs() {
             </div>
           </div>
 
-          <div className="search-box">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search blogs"
-              className="blogstable input"
-            />
-          </div>
-
           <div className="blogstable">
-            <table className="table table-styling" data-aos="fade-up">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Title</th>
-                  <th>Slug</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
+            <div className="flex gap-2 mb-1" data-aos="fade-up">
+              <h2>Search blogs</h2>
+
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search blogs"
+                className="blogstable input"
+              />
+            </div>
+            <div className="blogstable">
+              <table className="table table-styling" data-aos="fade-up">
+                <thead>
                   <tr>
-                    <td colSpan={4}>
-                      <Dataloading />
-                    </td>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Actions</th>
                   </tr>
-                ) : currentBlogs.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="text-center">
-                      No published blogs
-                    </td>
-                  </tr>
-                ) : (
-                  currentBlogs.map((blog, index) => (
-                    <tr key={blog._id}>
-                      <td>{indexOfFirstBlog + index + 1}</td>
-                      <td>{blog.title}</td>
-                      <td>{blog.slug}</td>
-                      <td>
-                        <div className="flex gap-2 flex-center">
-                          <Link href={`/blogs/edit/${blog._id}`}>
-                            <FaEdit title="Edit" />
-                          </Link>
-                          <Link href={`/blogs/delete/${blog._id}`}>
-                            <RiDeleteBin6Fill title="Delete" />
-                          </Link>
-                        </div>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4}>
+                        <Dataloading />
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : currentBlogs.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="text-center">
+                        No published blogs
+                      </td>
+                    </tr>
+                  ) : (
+                    currentBlogs.map((blog, index) => (
+                      <tr key={blog._id}>
+                        <td>{indexOfFirstBlog + index + 1}</td>
+                        <td>{blog.title}</td>
+                        <td>{blog.slug}</td>
+                        <td>
+                          <div className="flex gap-2 flex-center">
+                            <Link href={`/blogs/edit/${blog._id}`}>
+                              <FaEdit title="Edit" />
+                            </Link>
+                            <Link href={`/blogs/delete/${blog._id}`}>
+                              <RiDeleteBin6Fill title="Delete" />
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
 
-            <div className="blogpagination">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (num) => (
-                  <button
-                    key={num}
-                    onClick={() => setCurrentPage(num)}
-                    className={currentPage === num ? "active" : ""}
-                  >
-                    {num}
-                  </button>
-                )
-              )}
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(p + 1, totalPages))
-                }
-                disabled={currentPage >= totalPages}
-              >
-                Next
-              </button>
+              <div className="blogpagination">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (num) => (
+                    <button
+                      key={num}
+                      onClick={() => setCurrentPage(num)}
+                      className={currentPage === num ? "active" : ""}
+                    >
+                      {num}
+                    </button>
+                  )
+                )}
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                  }
+                  disabled={currentPage >= totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>
