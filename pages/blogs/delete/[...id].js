@@ -1,3 +1,5 @@
+"use client";
+
 import Blog from "@/components/Blog";
 import Loading from "@/components/Loading";
 import axios from "axios";

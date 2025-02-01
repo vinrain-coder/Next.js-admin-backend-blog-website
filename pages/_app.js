@@ -1,3 +1,5 @@
+"use client";
+
 import Aos from "@/components/Aos";
 import Aside from "@/components/Aside";
 import Header from "@/components/Header";

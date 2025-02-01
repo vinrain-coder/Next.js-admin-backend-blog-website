@@ -1,3 +1,6 @@
+"use client";
+
+
 import Blog from "@/components/Blog";
 import axios from "axios";
 import { useRouter } from "next/router";

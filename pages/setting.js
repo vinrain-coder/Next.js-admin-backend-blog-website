@@ -1,3 +1,5 @@
+"use client";
+
 import Loading from "@/components/Loading";
 import { useSession, signOut } from "next-auth/react";
 import Head from "next/head";
