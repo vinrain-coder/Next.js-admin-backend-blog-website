@@ -71,10 +71,9 @@ export default function Setting() {
                 </h2>
                 <hr />
                 <div className="flex flex-sb mt-1">
-                  <h3>
-                    Active account <br /> <span>Email</span>
-                  </h3>
-                  <button onClick={logout}>Logout</button>
+                  <button onClick={logout} className="acceptButton">
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>
