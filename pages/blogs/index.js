@@ -35,7 +35,7 @@ export default function Blogs() {
   const [currentPage, setCurrentPage] = useState(1); // State for managing the current page
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
-  const [perpage] = useState(4); // Number of blogs to show per page
+  const [perpage] = useState(10); // Number of blogs to show per page
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber); // Update the current page number

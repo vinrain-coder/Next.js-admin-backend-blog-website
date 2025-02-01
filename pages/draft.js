@@ -32,7 +32,7 @@ export default function Draft() {
   }
 
   const [currentPage, setCurrentPage] = useState(1);
-  const perpage = 4;
+  const perpage = 10;
 
   const { alldata, loading } = useFetchData("/api/blogapi");
 
