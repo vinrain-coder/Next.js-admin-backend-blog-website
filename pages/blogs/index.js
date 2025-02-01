@@ -13,8 +13,11 @@ import { RiDeleteBin6Fill } from "react-icons/ri";
 export default function Blogs() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
+  // Ensure session is checked only after the component has mounted on the client side
   useEffect(() => {
+    setMounted(true);
     if (status === "loading") return; // Don't redirect while loading
     if (status === "unauthenticated") {
       router.push("/login");
@@ -23,6 +26,7 @@ export default function Blogs() {
 
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
+  // Handle errors when data fails to load
   if (error) {
     return (
       <div>
@@ -32,7 +36,8 @@ export default function Blogs() {
     );
   }
 
-  if (status === "loading" || !alldata) {
+  // Render loading state if session or data is not yet available
+  if (!mounted || status === "loading" || !alldata) {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />
@@ -68,6 +73,7 @@ export default function Blogs() {
     pageNumbers.push(i);
   }
 
+  // Reset page to 1 when search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
@@ -118,44 +124,43 @@ export default function Blogs() {
                     <Dataloading />
                   </td>
                 </tr>
+              ) : currentBlogs.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="text-center">
+                    No published blogs
+                  </td>
+                </tr>
               ) : (
-                currentBlogs.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="text-center">
-                      No published blogs
+                currentBlogs.map((blog, index) => (
+                  <tr key={blog._id}>
+                    <td>{indexOfFirstBlog + index + 1}</td>
+                    <td>
+                      <h3>{blog.title}</h3>
+                    </td>
+                    <td>
+                      <pre>{blog.slug}</pre>
+                    </td>
+                    <td>
+                      <div className="flex gap-2 flex-center">
+                        <Link href={`/blogs/edit/${blog._id}`}>
+                          <button title="edit">
+                            <FaEdit />
+                          </button>
+                        </Link>
+                        <Link href={`/blogs/delete/${blog._id}`}>
+                          <button title="delete">
+                            <RiDeleteBin6Fill />
+                          </button>
+                        </Link>
+                      </div>
                     </td>
                   </tr>
-                ) : (
-                  currentBlogs.map((blog, index) => (
-                    <tr key={blog._id}>
-                      <td>{indexOfFirstBlog + index + 1}</td>
-                      <td>
-                        <h3>{blog.title}</h3>
-                      </td>
-                      <td>
-                        <pre>{blog.slug}</pre>
-                      </td>
-                      <td>
-                        <div className="flex gap-2 flex-center">
-                          <Link href={`/blogs/edit/${blog._id}`}>
-                            <button title="edit">
-                              <FaEdit />
-                            </button>
-                          </Link>
-                          <Link href={`/blogs/delete/${blog._id}`}>
-                            <button title="delete">
-                              <RiDeleteBin6Fill />
-                            </button>
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )
+                ))
               )}
             </tbody>
           </table>
-          {filteredBlogs.length === 0 ? null : (
+
+          {filteredBlogs.length > 0 && (
             <div className="blogpagination">
               <button
                 onClick={() => paginate(currentPage - 1)}
