@@ -20,22 +20,19 @@ export default function DraftBlogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
-  // Ensure the component only runs on the client side and session check is done
+  // Ensure the component only runs on the client side
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Redirect to login page if not authenticated
   useEffect(() => {
     if (mounted && status === "unauthenticated") {
-      router.replace("/login");
+      router.replace("/login"); // Redirect to login if not authenticated
     }
   }, [status, mounted, router]);
 
-  // Fetch data for blogs only after the session is ready
-  const { alldata, loading, error } = useFetchData("/api/blogapi");
-
-  if (!mounted || status === "loading") {
+  // Loading state
+  if (status === "loading" || status === "unauthenticated") {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />
@@ -44,9 +41,7 @@ export default function DraftBlogs() {
     );
   }
 
-  if (status === "unauthenticated") {
-    return <div>Please log in to access this page.</div>;
-  }
+  const { alldata, loading, error } = useFetchData("/api/blogapi");
 
   if (error) {
     return (
@@ -57,8 +52,20 @@ export default function DraftBlogs() {
     );
   }
 
-  // Filter and paginate the blogs
+  // Wait for the client to be mounted before rendering any data
+  if (!mounted || !alldata) {
+    return (
+      <div className="loadingdata flex flex-col flex-center wh_100">
+        <Loading />
+        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+      </div>
+    );
+  }
+
+  // Filter for draft blogs
   const draftBlogs = alldata?.filter((blog) => blog.status === "draft") || [];
+
+  // Search functionality
   const filteredBlogs =
     searchQuery.trim() === ""
       ? draftBlogs
@@ -73,7 +80,7 @@ export default function DraftBlogs() {
   const totalPages = Math.ceil(filteredBlogs.length / perpage);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset page when search query changes
+    setCurrentPage(1); // Reset page number when search query changes
   }, [searchQuery]);
 
   return (
