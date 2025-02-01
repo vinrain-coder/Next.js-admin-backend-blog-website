@@ -33,10 +33,20 @@ export default function Draft() {
     );
   }
 
+  const { alldata, loading, error } = useFetchData("/api/blogapi");
+
+  if (error) {
+    console.error("Error fetching draft blogs:", error.message);
+    return (
+      <div>
+        <h2>Failed to load draft blogs</h2>
+        <p>{error.message}</p>
+      </div>
+    );
+  }
+
   const [currentPage, setCurrentPage] = useState(1);
   const perpage = 10;
-
-  const { alldata, loading } = useFetchData("/api/blogapi");
 
   if (!alldata) return null; // Prevent errors when data is not loaded
 
@@ -46,30 +56,35 @@ export default function Draft() {
   const indexOfFirstBlog = indexOfLastBlog - perpage;
   const currentBlogs = draftBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
-  const totalPages = Math.ceil(draftBlogs.length / perpage);
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const totalBlogs = draftBlogs.length;
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalBlogs / perpage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
       <Head>
-        <title>Drafted Blogs</title>
+        <title>Draft Blogs</title>
       </Head>
       <div className="blogpage">
         <div className="titledashboard flex flex-sb">
-          <div>
+          <div data-aos="fade-right">
             <h2>
               All draft <span>blogs</span>
             </h2>
             <h3>ADMIN PANEL</h3>
           </div>
-          <div className="breadcrumb">
+          <div className="breadcrumb" data-aos="fade-left">
             <BiPodcast /> <span>/</span>
-            <span>Draft Blogs</span>
+            <span>Blogs</span>
           </div>
         </div>
 
         <div className="blogstable">
-          <table className="table teble-styling">
+          <table className="table teble-styling" data-aos="fade-up">
             <thead>
               <tr>
                 <th>#</th>
@@ -121,33 +136,29 @@ export default function Draft() {
             </tbody>
           </table>
 
-          {draftBlogs.length > 0 && (
-            <div className="blogpagination">
+          <div className="blogpagination">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            {pageNumbers.map((number) => (
               <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
+                key={number}
+                onClick={() => paginate(number)}
+                className={currentPage === number ? "active" : ""}
               >
-                Previous
+                {number}
               </button>
-              {pageNumbers.map((number) => (
-                <button
-                  key={number}
-                  onClick={() => setCurrentPage(number)}
-                  className={currentPage === number ? "active" : ""}
-                >
-                  {number}
-                </button>
-              ))}
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          )}
+            ))}
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage >= pageNumbers.length}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </>

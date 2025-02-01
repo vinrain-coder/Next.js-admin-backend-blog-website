@@ -1,14 +1,14 @@
-import Dataloading from "@/components/Dataloading";
-import Loading from "@/components/Loading";
-import useFetchData from "@/hooks/useFetchData";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { BiPodcast } from "react-icons/bi";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import useFetchData from "@/hooks/useFetchData";
+import Loading from "@/components/Loading";
+import Dataloading from "@/components/Dataloading";
 
 export default function Blogs() {
   const { data: session, status } = useSession();
@@ -28,6 +28,7 @@ export default function Blogs() {
 
   // Handle errors when data fails to load
   if (error) {
+    console.error("Error fetching data:", error.message); // Log error to debug
     return (
       <div>
         <h2>Failed to load data</h2>
@@ -97,17 +98,17 @@ export default function Blogs() {
           </div>
         </div>
 
-        <div className="blogstable">
-          <div className="flex gap-2 mb-1" data-aos="fade-up">
-            <h2>Search blogs</h2>
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              type="text"
-              placeholder="Search by title..."
-            />
-          </div>
+        <div className="search-box">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search blogs"
+            className="search-input"
+          />
+        </div>
 
+        <div className="blogstable">
           <table className="table teble-styling" data-aos="fade-up">
             <thead>
               <tr>
@@ -160,36 +161,29 @@ export default function Blogs() {
             </tbody>
           </table>
 
-          {filteredBlogs.length > 0 && (
-            <div className="blogpagination">
+          <div className="blogpagination">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            {pageNumbers.map((number) => (
               <button
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
+                key={number}
+                onClick={() => paginate(number)}
+                className={currentPage === number ? "active" : ""}
               >
-                Previous
+                {number}
               </button>
-              {pageNumbers
-                .slice(
-                  Math.max(currentPage - 3, 0),
-                  Math.min(currentPage + 2, pageNumbers.length)
-                )
-                .map((number) => (
-                  <button
-                    key={number}
-                    onClick={() => paginate(number)}
-                    className={`${currentPage === number ? "active" : ""}`}
-                  >
-                    {number}
-                  </button>
-                ))}
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage >= pageNumbers.length}
-              >
-                Next
-              </button>
-            </div>
-          )}
+            ))}
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage >= pageNumbers.length}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </>
