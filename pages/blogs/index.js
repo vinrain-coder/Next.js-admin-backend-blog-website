@@ -21,7 +21,8 @@ export default function Blogs() {
     }
   }, [session, router]);
 
-  // Display loading state
+  const { alldata, loading } = useFetchData("/api/blogapi");
+
   if (loading) {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
@@ -35,7 +36,6 @@ export default function Blogs() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   const [perpage] = useState(4); // Number of blogs to show per page
-  const { alldata, loading } = useFetchData("/api/blogapi"); // Fetch data using the custom hook
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber); // Update the current page number
