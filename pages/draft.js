@@ -20,13 +20,18 @@ export default function DraftBlogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
+  // Ensure component only runs on client side
   useEffect(() => {
     setMounted(true);
-    if (status === "unauthenticated") {
-      router.replace("/login"); // Prevents back navigation
-    }
-  }, [status, router]);
+  }, []);
 
+  useEffect(() => {
+    if (mounted && status === "unauthenticated") {
+      router.replace("/login"); // Redirect to login page if not authenticated
+    }
+  }, [status, mounted, router]);
+
+  // Fetch data for blogs
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
   if (error) {
@@ -62,7 +67,7 @@ export default function DraftBlogs() {
   const totalPages = Math.ceil(filteredBlogs.length / perpage);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset page when search query changes
   }, [searchQuery]);
 
   return (

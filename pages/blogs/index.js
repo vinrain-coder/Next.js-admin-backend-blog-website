@@ -20,13 +20,18 @@ export default function Blogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
+  // Ensure the component is mounted on the client before doing any session checks or rendering
   useEffect(() => {
     setMounted(true);
-    if (status === "unauthenticated") {
-      router.replace("/login"); // Use replace to prevent back navigation
-    }
-  }, [status, router]);
+  }, []);
 
+  useEffect(() => {
+    if (mounted && status === "unauthenticated") {
+      router.replace("/login"); // Redirect to login if not authenticated
+    }
+  }, [status, mounted, router]);
+
+  // Fetch data from API
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
   if (error) {
@@ -38,6 +43,7 @@ export default function Blogs() {
     );
   }
 
+  // Wait for the client to be mounted before rendering any data
   if (!mounted || status === "loading" || !alldata) {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
@@ -47,8 +53,9 @@ export default function Blogs() {
     );
   }
 
-  const publishedBlogs =
-    alldata?.filter((blog) => blog.status === "publish") || [];
+  // Filter published blogs
+  const publishedBlogs = alldata?.filter((blog) => blog.status === "publish") || [];
+  
   const filteredBlogs =
     searchQuery.trim() === ""
       ? publishedBlogs
@@ -63,7 +70,7 @@ export default function Blogs() {
   const totalPages = Math.ceil(filteredBlogs.length / perpage);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset to first page when search query changes
   }, [searchQuery]);
 
   return (
