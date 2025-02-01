@@ -31,7 +31,17 @@ export default function Blogs() {
     }
   }, [status, mounted, router]);
 
-  // Fetch data from API
+  // Wait for the session status to be authenticated or loading
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div className="loadingdata flex flex-col flex-center wh_100">
+        <Loading />
+        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+      </div>
+    );
+  }
+
+  // Fetch data from API once session is authenticated
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
   if (error) {
@@ -44,7 +54,7 @@ export default function Blogs() {
   }
 
   // Wait for the client to be mounted before rendering any data
-  if (!mounted || status === "loading" || !alldata) {
+  if (!mounted || !alldata) {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />
@@ -54,8 +64,9 @@ export default function Blogs() {
   }
 
   // Filter published blogs
-  const publishedBlogs = alldata?.filter((blog) => blog.status === "publish") || [];
-  
+  const publishedBlogs =
+    alldata?.filter((blog) => blog.status === "publish") || [];
+
   const filteredBlogs =
     searchQuery.trim() === ""
       ? publishedBlogs

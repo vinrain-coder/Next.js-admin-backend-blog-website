@@ -20,19 +20,33 @@ export default function DraftBlogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
-  // Ensure component only runs on client side
+  // Ensure the component only runs on the client side and session check is done
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Redirect to login page if not authenticated
   useEffect(() => {
     if (mounted && status === "unauthenticated") {
-      router.replace("/login"); // Redirect to login page if not authenticated
+      router.replace("/login");
     }
   }, [status, mounted, router]);
 
-  // Fetch data for blogs
+  // Fetch data for blogs only after the session is ready
   const { alldata, loading, error } = useFetchData("/api/blogapi");
+
+  if (!mounted || status === "loading") {
+    return (
+      <div className="loadingdata flex flex-col flex-center wh_100">
+        <Loading />
+        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return <div>Please log in to access this page.</div>;
+  }
 
   if (error) {
     return (
@@ -43,15 +57,7 @@ export default function DraftBlogs() {
     );
   }
 
-  if (!mounted || status === "loading" || !alldata) {
-    return (
-      <div className="loadingdata flex flex-col flex-center wh_100">
-        <Loading />
-        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-      </div>
-    );
-  }
-
+  // Filter and paginate the blogs
   const draftBlogs = alldata?.filter((blog) => blog.status === "draft") || [];
   const filteredBlogs =
     searchQuery.trim() === ""
