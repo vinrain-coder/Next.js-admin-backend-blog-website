@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -13,54 +13,28 @@ import Loading from "@/components/Loading";
 import Dataloading from "@/components/Dataloading";
 
 export default function Blogs() {
-  // const { data: session, status } = useSession();
+  const { data: session, loading } = useSession();
   const router = useRouter();
-  // const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 3;
 
-  // Ensure the component is mounted before performing any actions
-  // useEffect(() => {
-  //   setMounted(true);
-  // }, []);
+  useEffect(() => {
+    if (!session) {
+      router.push("/login");
+    }
+  }, [session, router]);
 
-  // useEffect(() => {
-  //   if (mounted && status === "unauthenticated") {
-  //     router.replace("/login"); // Redirect to login if not authenticated
-  //   }
-  // }, [status, mounted, router]);
-
-  // Loading state
-  // if (status === "loading" || status === "unauthenticated") {
-  //   return (
-  //     <div className="loadingdata flex flex-col flex-center wh_100">
-  //       <Loading />
-  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-  //     </div>
-  //   );
-  // }
-
-  const { alldata, loading, error } = useFetchData("/api/blogapi");
-
-  if (error) {
+  if (loading) {
     return (
-      <div>
-        <h2>Failed to load data</h2>
-        <p>{error.message}</p>
+      <div className="loadingdata flex flex-col flex-center wh_100">
+        <Loading />
+        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
       </div>
     );
   }
 
-  // Wait for the client to be mounted before rendering any data
-  // if (!mounted || !alldata) {
-  //   return (
-  //     <div className="loadingdata flex flex-col flex-center wh_100">
-  //       <Loading />
-  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-  //     </div>
-  //   );
-  // }
+  const { alldata } = useFetchData("/api/blogapi");
 
   // Filter for published blogs
   const publishedBlogs =
@@ -84,105 +58,111 @@ export default function Blogs() {
     setCurrentPage(1); // Reset page number on search query change
   }, [searchQuery]);
 
-  return (
-    <>
-      <Head>
-        <title>Published Blogs</title>
-      </Head>
-      <div className="blogpage">
-        <div className="titledashboard flex flex-sb">
-          <div data-aos="fade-right">
-            <h2>
-              All published <span>blogs</span>
-            </h2>
-            <h3>ADMIN PANEL</h3>
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>Published Blogs</title>
+        </Head>
+        <div className="blogpage">
+          <div className="titledashboard flex flex-sb">
+            <div data-aos="fade-right">
+              <h2>
+                All published <span>blogs</span>
+              </h2>
+              <h3>ADMIN PANEL</h3>
+            </div>
+            <div className="breadcrumb" data-aos="fade-left">
+              <BiPodcast /> <span>/</span>
+              <span>Blogs</span>
+            </div>
           </div>
-          <div className="breadcrumb" data-aos="fade-left">
-            <BiPodcast /> <span>/</span>
-            <span>Blogs</span>
+
+          <div className="search-box">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search blogs"
+              className="blogstable input"
+            />
           </div>
-        </div>
 
-        <div className="search-box">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search blogs"
-            className="search-input"
-          />
-        </div>
-
-        <div className="blogstable">
-          <table className="table table-styling" data-aos="fade-up">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
+          <div className="blogstable">
+            <table className="table table-styling" data-aos="fade-up">
+              <thead>
                 <tr>
-                  <td colSpan={4}>
-                    <Dataloading />
-                  </td>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Slug</th>
+                  <th>Actions</th>
                 </tr>
-              ) : currentBlogs.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="text-center">
-                    No published blogs
-                  </td>
-                </tr>
-              ) : (
-                currentBlogs.map((blog, index) => (
-                  <tr key={blog._id}>
-                    <td>{indexOfFirstBlog + index + 1}</td>
-                    <td>{blog.title}</td>
-                    <td>{blog.slug}</td>
-                    <td>
-                      <div className="flex gap-2 flex-center">
-                        <Link href={`/blogs/edit/${blog._id}`}>
-                          <FaEdit title="Edit" />
-                        </Link>
-                        <Link href={`/blogs/delete/${blog._id}`}>
-                          <RiDeleteBin6Fill title="Delete" />
-                        </Link>
-                      </div>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={4}>
+                      <Dataloading />
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : currentBlogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      No published blogs
+                    </td>
+                  </tr>
+                ) : (
+                  currentBlogs.map((blog, index) => (
+                    <tr key={blog._id}>
+                      <td>{indexOfFirstBlog + index + 1}</td>
+                      <td>{blog.title}</td>
+                      <td>{blog.slug}</td>
+                      <td>
+                        <div className="flex gap-2 flex-center">
+                          <Link href={`/blogs/edit/${blog._id}`}>
+                            <FaEdit title="Edit" />
+                          </Link>
+                          <Link href={`/blogs/delete/${blog._id}`}>
+                            <RiDeleteBin6Fill title="Delete" />
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
 
-          <div className="blogpagination">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+            <div className="blogpagination">
               <button
-                key={num}
-                onClick={() => setCurrentPage(num)}
-                className={currentPage === num ? "active" : ""}
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
               >
-                {num}
+                Previous
               </button>
-            ))}
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage >= totalPages}
-            >
-              Next
-            </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (num) => (
+                  <button
+                    key={num}
+                    onClick={() => setCurrentPage(num)}
+                    className={currentPage === num ? "active" : ""}
+                  >
+                    {num}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
+                disabled={currentPage >= totalPages}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }

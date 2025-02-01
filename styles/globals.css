@@ -629,8 +629,8 @@ button {
     margin-top: -35px;
 }
 
-.blogstable input {
-    width: 450px;
+.blogstable  {
+    widtinputh: 450px;
     padding: 10px;
     border: 1px solid #999;
     font-size: 22px;
