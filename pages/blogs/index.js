@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -13,33 +13,33 @@ import Loading from "@/components/Loading";
 import Dataloading from "@/components/Dataloading";
 
 export default function Blogs() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
+  // const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const perpage = 10;
+  const perpage = 3;
 
   // Ensure the component is mounted before performing any actions
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
 
-  useEffect(() => {
-    if (mounted && status === "unauthenticated") {
-      router.replace("/login"); // Redirect to login if not authenticated
-    }
-  }, [status, mounted, router]);
+  // useEffect(() => {
+  //   if (mounted && status === "unauthenticated") {
+  //     router.replace("/login"); // Redirect to login if not authenticated
+  //   }
+  // }, [status, mounted, router]);
 
   // Loading state
-  if (status === "loading" || status === "unauthenticated") {
-    return (
-      <div className="loadingdata flex flex-col flex-center wh_100">
-        <Loading />
-        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-      </div>
-    );
-  }
+  // if (status === "loading" || status === "unauthenticated") {
+  //   return (
+  //     <div className="loadingdata flex flex-col flex-center wh_100">
+  //       <Loading />
+  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+  //     </div>
+  //   );
+  // }
 
   const { alldata, loading, error } = useFetchData("/api/blogapi");
 
@@ -53,14 +53,14 @@ export default function Blogs() {
   }
 
   // Wait for the client to be mounted before rendering any data
-  if (!mounted || !alldata) {
-    return (
-      <div className="loadingdata flex flex-col flex-center wh_100">
-        <Loading />
-        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-      </div>
-    );
-  }
+  // if (!mounted || !alldata) {
+  //   return (
+  //     <div className="loadingdata flex flex-col flex-center wh_100">
+  //       <Loading />
+  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+  //     </div>
+  //   );
+  // }
 
   // Filter for published blogs
   const publishedBlogs =
