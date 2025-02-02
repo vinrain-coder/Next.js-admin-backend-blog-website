@@ -46,6 +46,11 @@ export default function DeleteBlog() {
     router.push("/");
   }
 
+  async function deleteOneblog() {
+    await axios.delete(`/api/blogapi?id=` + id);
+    goback();
+  }
+
   if (session) {
     return (
       <>

@@ -13,27 +13,26 @@ import Loading from "@/components/Loading";
 import Dataloading from "@/components/Dataloading";
 
 export default function DraftBlogs() {
-  const { data: session, loading } = useSession();
+  // const { data: session, status } = useSession();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
-  useEffect(() => {
-    if (!session) {
-      router.push("/login");
-    }
-  }, [session, router]);
+  // useEffect(() => {
+  //   if (!session) {
+  //     router.push("/login");
+  //   }
+  // }, [session, router]);
 
-  if (loading) {
-    return (
-      <div className="loadingdata flex flex-col flex-center wh_100">
-        <Loading />
-        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-      </div>
-    );
-  }
+  // if (status==='loading') {
+  //   return (
+  //     <div className="loadingdata flex flex-col flex-center wh_100">
+  //       <Loading />
+  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+  //     </div>
+  //   );
+  // }
 
   const { alldata } = useFetchData("/api/blogapi");
 
@@ -58,7 +57,7 @@ export default function DraftBlogs() {
     setCurrentPage(1); // Reset page number when search query changes
   }, [searchQuery]);
 
-  if (session) {
+  // if (session) {
     return (
       <>
         <Head>
@@ -98,7 +97,7 @@ export default function DraftBlogs() {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {status==='loading' ? (
                     <tr>
                       <td colSpan={4}>
                         <Dataloading />
@@ -163,5 +162,5 @@ export default function DraftBlogs() {
           </div>
       </>
     );
-  }
+  // }
 }

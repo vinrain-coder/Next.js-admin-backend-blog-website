@@ -13,19 +13,19 @@ import Loading from "@/components/Loading";
 import Dataloading from "@/components/Dataloading";
 
 export default function Blogs() {
-  const { data: session, loading, status } = useSession();
+  const { data: session,  status } = useSession();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
   useEffect(() => {
-    if (!session && status !== "loading") {
+    if (!session ) {
       router.push("/login");
     }
-  }, [session, status, router]);
+  }, [session, router]);
 
-  if (loading) {
+  if (status==='loading') {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
         <Loading />
@@ -99,7 +99,7 @@ export default function Blogs() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
+                {status==='loading' ? (
                   <tr>
                     <td colSpan={4}>
                       <Dataloading />
