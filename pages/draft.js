@@ -118,11 +118,11 @@ export default function DraftBlogs() {
                         <td>{blog.slug}</td>
                         <td>
                           <div className="flex gap-2 flex-center">
-                            <Link href={`/blogs/edit/${blog._id}`}>
-                              <FaEdit title="Edit" />
+                            <Link href={'/blogs/edit/' + blog._id}>
+                              <button title="edit"><FaEdit /></button>
                             </Link>
-                            <Link href={`/blogs/delete/${blog._id}`}>
-                              <RiDeleteBin6Fill title="Delete" />
+                            <Link href={'/blogs/delete/' + blog._id}>
+                               <button title="delete"><RiDeleteBin6Fill /></button>
                             </Link>
                           </div>
                         </td>
