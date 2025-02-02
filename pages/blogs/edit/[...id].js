@@ -17,15 +17,15 @@ export default function EditBlog() {
   const [productInfo, setProductInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Redirect only if the user is NOT logged in
+  // ✅ Fix: Redirect only if user is NOT logged in
   useEffect(() => {
-    if (!session && status !== "loading") {
+    if (!session) {
       router.push("/login");
     }
-  }, [session, status, router]);
+  }, [session, router]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) return; // ✅ Fix: Ensure `id` is defined before making API request
 
     setLoading(true);
     axios
@@ -37,7 +37,7 @@ export default function EditBlog() {
       .catch(() => setLoading(false));
   }, [id]);
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
         <Loading />
@@ -45,9 +45,6 @@ export default function EditBlog() {
       </div>
     );
   }
-
-  // ✅ Do not redirect immediately when session exists
-  if (!session) return null;
 
   return (
     <>

@@ -13,17 +13,17 @@ import Loading from "@/components/Loading";
 import Dataloading from "@/components/Dataloading";
 
 export default function Blogs() {
-  const { data: session, loading } = useSession();
+  const { data: session, loading, status } = useSession();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const perpage = 10;
 
   useEffect(() => {
-    if (!session) {
+    if (!session && status !== "loading") {
       router.push("/login");
     }
-  }, [session, router]);
+  }, [session, status, router]);
 
   if (loading) {
     return (
@@ -89,79 +89,83 @@ export default function Blogs() {
               />
             </div>
 
-              <table className="table table-styling" data-aos="fade-up">
-                <thead>
+            <table className="table table-styling" data-aos="fade-up">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Slug</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
                   <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Slug</th>
-                    <th>Actions</th>
+                    <td colSpan={4}>
+                      <Dataloading />
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={4}>
-                        <Dataloading />
+                ) : currentBlogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      No published blogs
+                    </td>
+                  </tr>
+                ) : (
+                  currentBlogs.map((blog, index) => (
+                    <tr key={blog._id}>
+                      <td>{indexOfFirstBlog + index + 1}</td>
+                      <td>{blog.title}</td>
+                      <td>{blog.slug}</td>
+                      <td>
+                        <div className="flex gap-2 flex-center">
+                          <Link href={"/blogs/edit/" + blog._id}>
+                            <button title="edit">
+                              <FaEdit />
+                            </button>
+                          </Link>
+                          <Link href={"/blogs/delete/" + blog._id}>
+                            <button title="delete">
+                              <RiDeleteBin6Fill />
+                            </button>
+                          </Link>
+                        </div>
                       </td>
                     </tr>
-                  ) : currentBlogs.length === 0 ? (
-                    <tr>
-                      <td colSpan={4} className="text-center">
-                        No published blogs
-                      </td>
-                    </tr>
-                  ) : (
-                    currentBlogs.map((blog, index) => (
-                      <tr key={blog._id}>
-                        <td>{indexOfFirstBlog + index + 1}</td>
-                        <td>{blog.title}</td>
-                        <td>{blog.slug}</td>
-                        <td>
-                          <div className="flex gap-2 flex-center">
-                            <Link href={'/blogs/edit/' + blog._id}>
-                              <button title="edit"><FaEdit /></button>
-                            </Link>
-                            <Link href={'/blogs/delete/' + blog._id}>
-                               <button title="delete"><RiDeleteBin6Fill /></button>
-                            </Link>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-
-              <div className="blogpagination">
-                <button
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (num) => (
-                    <button
-                      key={num}
-                      onClick={() => setCurrentPage(num)}
-                      className={currentPage === num ? "active" : ""}
-                    >
-                      {num}
-                    </button>
-                  )
+                  ))
                 )}
-                <button
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(p + 1, totalPages))
-                  }
-                  disabled={currentPage >= totalPages}
-                >
-                  Next
-                </button>
-              </div>
+              </tbody>
+            </table>
+
+            <div className="blogpagination">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (num) => (
+                  <button
+                    key={num}
+                    onClick={() => setCurrentPage(num)}
+                    className={currentPage === num ? "active" : ""}
+                  >
+                    {num}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
+                disabled={currentPage >= totalPages}
+              >
+                Next
+              </button>
             </div>
           </div>
+        </div>
       </>
     );
   }

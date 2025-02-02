@@ -16,31 +16,28 @@ export default function DeleteBlog() {
   const [productInfo, setProductInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Redirect only if user is NOT logged in
+  // ✅ Fix: Redirect only if user is NOT logged in
   useEffect(() => {
-    if (!session && status !== "loading") {
+    if (!session) {
       router.push("/login");
     }
-  }, [session, status, router]);
+  }, [session, router]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) return; // ✅ Fix: Prevent running API request when `id` is undefined
 
-    axios
-      .get(`/api/blogapi?id=${id}`)
-      .then((response) => {
-        setProductInfo(response.data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    axios.get(`/api/blogapi?id=${id}`).then((response) => {
+      setProductInfo(response.data);
+      setLoading(false);
+    });
   }, [id]);
 
   function goback() {
-    router.push("/blogs");
+    router.push("/");
   }
 
   async function deleteOneblog() {
-    if (!id) return;
+    if (!id) return; // ✅ Prevent API call with undefined `id`
 
     try {
       await axios.delete(`/api/blogapi?id=${id}`);
@@ -50,7 +47,7 @@ export default function DeleteBlog() {
     }
   }
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
         <Loading />
@@ -58,9 +55,6 @@ export default function DeleteBlog() {
       </div>
     );
   }
-
-  // ✅ Do not redirect immediately when session exists
-  if (!session) return null;
 
   return (
     <>
