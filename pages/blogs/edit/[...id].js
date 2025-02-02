@@ -10,25 +10,26 @@ import Loading from "@/components/Loading";
 import { useSession } from "next-auth/react";
 
 export default function EditBlog() {
-  // const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push("/login");
-  //   }
-  // }, [session, router]);
+  // ✅ Fix: Redirect only if user is NOT logged in
+  useEffect(() => {
+    if (!session) {
+      router.push("/login");
+    }
+  }, [session, router]);
 
-  // if (status === "loading") {
-  //   return (
-  //     <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
-  //       <Loading />
-  //       <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
-  //     </div>
-  //   );
-  // }
+  if (status === "loading") {
+    return (
+      <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
+        <Loading />
+        <h1 className="mt-4 text-lg font-semibold">Loading...</h1>
+      </div>
+    );
+  }
 
   const { id } = router.query;
 
@@ -44,7 +45,7 @@ export default function EditBlog() {
     }
   }, [id]);
 
-  // if (session) {
+  if (session) {
     return (
       <>
         <Head>
@@ -67,5 +68,5 @@ export default function EditBlog() {
         </div>
       </>
     );
-  // }
+  }
 }
