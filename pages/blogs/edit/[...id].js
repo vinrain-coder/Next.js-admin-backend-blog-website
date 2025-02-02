@@ -17,7 +17,7 @@ export default function EditBlog() {
   const [productInfo, setProductInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fix: Redirect only if user is NOT logged in
+  // ✅ Redirect only if the user is NOT logged in
   useEffect(() => {
     if (!session && status !== "loading") {
       router.push("/login");
@@ -25,7 +25,7 @@ export default function EditBlog() {
   }, [session, status, router]);
 
   useEffect(() => {
-    if (!id) return; // ✅ Fix: Ensure `id` is defined before making API request
+    if (!id) return;
 
     setLoading(true);
     axios
@@ -46,28 +46,29 @@ export default function EditBlog() {
     );
   }
 
-  if (session) {
-    return (
-      <>
-        <Head>
-          <title>Update blog</title>
-        </Head>
-        <div className="blogpage">
-          <div className="titledashboard flex justify-between">
-            <div>
-              <h2>
-                Edit <span>{productInfo?.title}</span>
-              </h2>
-              <h3>ADMIN PANEL</h3>
-            </div>
-            <div className="breadcrumb flex items-center gap-1">
-              <BiPodcast /> <span>/</span>
-              <span>Edit Blogs</span>
-            </div>
+  // ✅ Do not redirect immediately when session exists
+  if (!session) return null;
+
+  return (
+    <>
+      <Head>
+        <title>Update blog</title>
+      </Head>
+      <div className="blogpage">
+        <div className="titledashboard flex justify-between">
+          <div>
+            <h2>
+              Edit <span>{productInfo?.title}</span>
+            </h2>
+            <h3>ADMIN PANEL</h3>
           </div>
-          <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
+          <div className="breadcrumb flex items-center gap-1">
+            <BiPodcast /> <span>/</span>
+            <span>Edit Blogs</span>
+          </div>
         </div>
-      </>
-    );
-  }
+        <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
+      </div>
+    </>
+  );
 }
