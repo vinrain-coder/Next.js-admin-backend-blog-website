@@ -52,14 +52,14 @@ export default function EditBlog() {
           <title>Update blog</title>
         </Head>
         <div className="blogpage">
-          <div className="titledashboard flex justify-between">
-            <div>
+          <div className="titledashboard flex flex-sb">
+            <div data-aos="fade-right">
               <h2>
                 Edit <span>{productInfo?.title}</span>
               </h2>
               <h3>ADMIN PANEL</h3>
             </div>
-            <div className="breadcrumb flex items-center gap-1">
+            <div className="breadcrumb" data-aos="fade-left">
               <BiPodcast /> <span>/</span>
               <span>Edit Blogs</span>
             </div>
