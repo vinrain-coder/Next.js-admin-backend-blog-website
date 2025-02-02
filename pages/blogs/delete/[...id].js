@@ -58,14 +58,14 @@ export default function DeleteBlog() {
           <title>Delete Blog</title>
         </Head>
         <div className="blogpage">
-          <div className="titledashboard flex justify-between">
-            <div>
+          <div className="titledashboard flex flex-sb">
+            <div data-aos="fade-right">
               <h2>
                 Delete <span>{productInfo?.title}</span>
               </h2>
               <h3>ADMIN PANEL</h3>
             </div>
-            <div className="breadcrumb flex items-center gap-1">
+            <div className="breadcrumb" data-aos="fade-left">
               <RiDeleteBin6Fill /> <span>/</span>
               <span>Delete Blog</span>
             </div>
