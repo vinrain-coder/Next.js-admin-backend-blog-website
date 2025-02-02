@@ -57,44 +57,46 @@ export default function DeleteBlog() {
     );
   }
 
-  return (
-    <>
-      <Head>
-        <title>Delete Blog</title>
-      </Head>
-      <div className="blogpage">
-        <div className="titledashboard flex justify-between">
-          <div>
-            <h2>
-              Delete <span>{productInfo?.title}</span>
-            </h2>
-            <h3>ADMIN PANEL</h3>
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>Delete Blog</title>
+        </Head>
+        <div className="blogpage">
+          <div className="titledashboard flex justify-between">
+            <div>
+              <h2>
+                Delete <span>{productInfo?.title}</span>
+              </h2>
+              <h3>ADMIN PANEL</h3>
+            </div>
+            <div className="breadcrumb flex items-center gap-1">
+              <RiDeleteBin6Fill /> <span>/</span>
+              <span>Delete Blog</span>
+            </div>
           </div>
-          <div className="breadcrumb flex items-center gap-1">
-            <RiDeleteBin6Fill /> <span>/</span>
-            <span>Delete Blog</span>
-          </div>
-        </div>
-        <div className="deletesec flex flex-center wh_100">
-          <div className="deletecard">
-            <svg viewBox="0 0 24 24" fill="red" height="6em" width="6em">
-              <path d="M4 19V7h12v12c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2-2M6 9v10h8V9H6m7.5-5H17v2H3V4h3.5l1-1h5l1 1M19 17v-2h2v2h-2m0-4Vh2v6h-2z" />
-            </svg>
-            <p className="cookieHeading">Are you sure?</p>
-            <p className="cookieDescription">
-              This action is permanent and cannot be reversed.
-            </p>
-            <div className="buttonContainer">
-              <button onClick={deleteOneblog} className="acceptButton">
-                Delete
-              </button>
-              <button onClick={goback} className="declineButton">
-                Cancel
-              </button>
+          <div className="deletesec flex flex-center wh_100">
+            <div className="deletecard">
+              <svg viewBox="0 0 24 24" fill="red" height="6em" width="6em">
+                <path d="M4 19V7h12v12c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2-2M6 9v10h8V9H6m7.5-5H17v2H3V4h3.5l1-1h5l1 1M19 17v-2h2v2h-2m0-4Vh2v6h-2z" />
+              </svg>
+              <p className="cookieHeading">Are you sure?</p>
+              <p className="cookieDescription">
+                This action is permanent and cannot be reversed.
+              </p>
+              <div className="buttonContainer">
+                <button onClick={deleteOneblog} className="acceptButton">
+                  Delete
+                </button>
+                <button onClick={goback} className="declineButton">
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }

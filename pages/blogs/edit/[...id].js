@@ -46,26 +46,28 @@ export default function EditBlog() {
     );
   }
 
-  return (
-    <>
-      <Head>
-        <title>Update blog</title>
-      </Head>
-      <div className="blogpage">
-        <div className="titledashboard flex justify-between">
-          <div>
-            <h2>
-              Edit <span>{productInfo?.title}</span>
-            </h2>
-            <h3>ADMIN PANEL</h3>
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>Update blog</title>
+        </Head>
+        <div className="blogpage">
+          <div className="titledashboard flex justify-between">
+            <div>
+              <h2>
+                Edit <span>{productInfo?.title}</span>
+              </h2>
+              <h3>ADMIN PANEL</h3>
+            </div>
+            <div className="breadcrumb flex items-center gap-1">
+              <BiPodcast /> <span>/</span>
+              <span>Edit Blogs</span>
+            </div>
           </div>
-          <div className="breadcrumb flex items-center gap-1">
-            <BiPodcast /> <span>/</span>
-            <span>Edit Blogs</span>
-          </div>
+          <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
         </div>
-        <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
