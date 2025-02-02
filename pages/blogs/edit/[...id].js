@@ -17,27 +17,25 @@ export default function EditBlog() {
   const [productInfo, setProductInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fix: Redirect only if user is NOT logged in
+  // ✅ Fix: Wait for session to load and then redirect if not authenticated
   useEffect(() => {
-    if (!session) {
+    if (status === "unauthenticated") {
       router.push("/login");
     }
-  }, [session, router]);
+  }, [status, router]);
 
   useEffect(() => {
-    if (!id) return; // ✅ Fix: Ensure `id` is defined before making API request
+    if (!id) return; // Wait until `id` is available before making API request
 
     setLoading(true);
     axios
       .get(`/api/blogapi?id=${id}`)
-      .then((response) => {
-        setProductInfo(response.data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      .then((response) => setProductInfo(response.data))
+      .catch(() => setLoading(false))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
         <Loading />
@@ -49,7 +47,7 @@ export default function EditBlog() {
   return (
     <>
       <Head>
-        <title>Update blog</title>
+        <title>Update Blog</title>
       </Head>
       <div className="blogpage">
         <div className="titledashboard flex justify-between">
