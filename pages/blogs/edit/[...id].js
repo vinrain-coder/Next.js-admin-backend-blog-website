@@ -12,30 +12,17 @@ import { useSession } from "next-auth/react";
 export default function EditBlog() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { id } = router.query;
 
-  const [productInfo, setProductInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fix: Wait for session to load and then redirect if not authenticated
+  // ✅ Fix: Redirect only if user is NOT logged in
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!session) {
       router.push("/login");
     }
-  }, [status, router]);
+  }, [session, router]);
 
-  useEffect(() => {
-    if (!id) return; // Wait until `id` is available before making API request
-
-    setLoading(true);
-    axios
-      .get(`/api/blogapi?id=${id}`)
-      .then((response) => setProductInfo(response.data))
-      .catch(() => setLoading(false))
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  if (status === "loading" || loading) {
+  if (status === "loading") {
     return (
       <div className="loadingdata flex flex-col items-center justify-center min-h-screen">
         <Loading />
@@ -44,26 +31,42 @@ export default function EditBlog() {
     );
   }
 
-  return (
-    <>
-      <Head>
-        <title>Update Blog</title>
-      </Head>
-      <div className="blogpage">
-        <div className="titledashboard flex justify-between">
-          <div>
-            <h2>
-              Edit <span>{productInfo?.title}</span>
-            </h2>
-            <h3>ADMIN PANEL</h3>
+  const { id } = router.query;
+
+  const [productInfo, setProductInfo] = useState(null);
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    } else {
+      axios.get(`/api/blogapi?id=` + id).then((response) => {
+        setProductInfo(response.data);
+      });
+    }
+  }, [id]);
+
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>Update blog</title>
+        </Head>
+        <div className="blogpage">
+          <div className="titledashboard flex justify-between">
+            <div>
+              <h2>
+                Edit <span>{productInfo?.title}</span>
+              </h2>
+              <h3>ADMIN PANEL</h3>
+            </div>
+            <div className="breadcrumb flex items-center gap-1">
+              <BiPodcast /> <span>/</span>
+              <span>Edit Blogs</span>
+            </div>
           </div>
-          <div className="breadcrumb flex items-center gap-1">
-            <BiPodcast /> <span>/</span>
-            <span>Edit Blogs</span>
-          </div>
+          <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
         </div>
-        <div className="mt-3">{productInfo && <Blog {...productInfo} />}</div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
