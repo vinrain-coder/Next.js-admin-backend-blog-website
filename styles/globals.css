@@ -600,8 +600,12 @@ button {
 
 .blogscategory td {
     list-style: auto;
-    padding: 2rem;
+    padding: 1rem;
     font-size: 1.3rem;
+}
+
+.blogscategory tbody tr{
+    overflow-y: scroll;
 }
 
 .blogscategory tbody tr:hover {
