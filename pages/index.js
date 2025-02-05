@@ -214,7 +214,7 @@ export default function Home() {
                   <li className="small-dot"></li>
                 </ul>
               </div>
-              <div className="blogscategory flex flex-center">
+              <div className="blogscategory flex flex-center p-0">
                 <table>
                   <thead>
                     <tr>
