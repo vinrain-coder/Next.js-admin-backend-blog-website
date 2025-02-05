@@ -105,10 +105,24 @@ export default function Blog({
           id="category"
           multiple
         >
-          <option value="html">Html</option>
-          <option value="nextjs">Next.js</option>
-          <option value="database">Database</option>
-          <option value="vercel">Vercel</option>
+          <option value="shoe-fashion-trends">Shoe Fashion Trends</option>
+          <option value="styling-tips">Styling Tips & Outfit Ideas</option>
+          <option value="bags-and-accessory-guides">
+            Bag & Accessory Guides
+          </option>
+          <option value="footwear-care">Footwear Care & Maintenance</option>
+          <option value="clothing-and-seasonal-fashion">
+            Clothing & Seasonal Fashion
+          </option>
+          <option value="product-reviews-and-comparisons">
+            Product Reviews & Comparisons
+          </option>
+          <option value="sustainable-fashion">Sustainable Fashion</option>
+          <option value="shopping-guides">
+            Shopping Guides & Smart Buying Tips
+          </option>
+          <option value="influencer-style">Celebrity & Influencer Style</option>
+          <option value="fashion-industry-news">Fashion Industry News</option>
         </select>
         <p className="existingcategory flex gap-1 mt-1 mb-1">
           Selected:{" "}
@@ -185,10 +199,21 @@ export default function Blog({
           id="tags"
           multiple
         >
-          <option value="html">Html</option>
-          <option value="nextjs">Next.js</option>
-          <option value="database">Database</option>
-          <option value="vercel">Vercel</option>
+          <option value="shoe-trends">Shoe Trends</option>
+          <option value="outfit-inspiration">Outfit Inspiration</option>
+          <option value="best-sneakers">Best Sneakers</option>
+          <option value="luxury-footwear">Luxury Footwear</option>
+          <option value="eco-friendly-fashion">Eco-Friendly Fashion</option>
+          <option value="must-have-accessories">Must-Have Accessories</option>
+          <option value="street-style">Street Style</option>
+          <option value="seasonal-looks">Seasonal Looks</option>
+          <option value="shoecare-tips">Shoe Care Tips</option>
+          <option value="budget-shopping">Budget Shopping</option>
+          <option value="fashion-hacks">Fashion Hacks</option>
+          <option value="statement-shoes">Statement Shoes</option>
+          <option value="wardrobe-essentials">Wardrobe Essentials</option>
+          <option value="trending-bags">Trending Bags</option>
+          <option value="style-icons">Style Icons</option>
         </select>
         <p className="existingtags flex gap-1 mt-1 mb-1">
           Selected:{" "}

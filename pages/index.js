@@ -120,6 +120,22 @@ export default function Home() {
     datasets,
   };
 
+  // Calculating total topics (unique blogcategories)
+  const totalTopics = [
+    ...new Set(blogsData.flatMap((blog) => blog.blogcategory)),
+  ];
+
+  // Calculating total tags (unique tags)
+  const totalTags = [...new Set(blogsData.flatMap((blog) => blog.tags))];
+
+  // Counting blogs in each category
+  const categoryCounts = blogsData.reduce((acc, blog) => {
+    blog.blogcategory.forEach((category) => {
+      acc[category] = (acc[category] || 0) + 1;
+    });
+    return acc;
+  }, {});
+
   if (session) {
     return (
       <>
@@ -153,11 +169,11 @@ export default function Home() {
             </div>
             <div className="four_card" data-aos="fade-right">
               <h2>Total topics</h2>
-              <span>10</span>
+              <span>{totalTopics.length}</span>
             </div>
             <div className="four_card" data-aos="fade-left">
               <h2>Total tags</h2>
-              <span>10</span>
+              <span>{totalTags.length}</span>
             </div>
             <div className="four_card" data-aos="fade-left">
               <h2>Total drafts</h2>
@@ -202,27 +218,17 @@ export default function Home() {
                 <table>
                   <thead>
                     <tr>
-                      <td>Topics</td>
-                      <td>Data</td>
+                      <td>Category</td>
+                      <td>Blogs Count</td>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Html</td>
-                      <td>10</td>
-                    </tr>
-                    <tr>
-                      <td>Next.js</td>
-                      <td>10</td>
-                    </tr>
-                    <tr>
-                      <td>Database</td>
-                      <td>10</td>
-                    </tr>
-                    <tr>
-                      <td>Vercel</td>
-                      <td>10</td>
-                    </tr>
+                    {Object.entries(categoryCounts).map(([category, count]) => (
+                      <tr key={category}>
+                        <td>{category}</td>
+                        <td>{count}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
