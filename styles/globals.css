@@ -584,13 +584,13 @@ button {
 .blogscategory {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 .blogscategory table {
-    width: 100%;
+    width: auto;
     color: #000;
-    overflow-y: auto;
-    padding: 0;
 }
 
 .blogscategory thead tr {
@@ -604,10 +604,6 @@ button {
     list-style: auto;
     padding: 2rem;
     font-size: 1.3rem;
-}
-
-.blogscategory tbody {
-    overflow-y: auto;
 }
 
 .blogscategory tbody tr:hover {
