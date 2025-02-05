@@ -604,7 +604,7 @@ button {
     font-size: 1.3rem;
 }
 
-.blogscategory tbody {
+.blogscategory tbody tr {
     overflow-y: auto;
 }
 
