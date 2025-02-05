@@ -604,7 +604,7 @@ button {
     font-size: 1.3rem;
 }
 
-.blogscategory tbody tr{
+.blogscategory tbody {
     overflow-y: scroll;
 }
 
