@@ -225,8 +225,8 @@ export default function Home() {
                   <tbody>
                     {Object.entries(categoryCounts).map(([category, count]) => (
                       <tr key={category}>
-                        <td>{category}</td>
-                        <td>{count}</td>
+                        <td style={{ width: "70%" }}>{category}</td>
+                        <td style={{ width: "30%" }}>{count}</td>
                       </tr>
                     ))}
                   </tbody>
