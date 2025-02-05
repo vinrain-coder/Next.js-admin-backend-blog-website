@@ -600,35 +600,17 @@ button {
 
 .blogscategory td {
     list-style: auto;
-    padding: 1rem;
+    padding: 2rem;
     font-size: 1.3rem;
+}
+
+.blogscategory tbody {
+    overflow-y: auto;
 }
 
 .blogscategory tbody tr:hover {
     background-color: #e3e3e3;
 }
-
-.blogscategory tbody {
-    display: block;
-    max-height: 300px; /* Adjust the height as needed */
-    overflow-y: auto;
-    width: 100%;
-    display: block;
-}
-
-.blogscategory tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-.blogscategory td {
-    padding: 1rem;
-    font-size: 1.3rem;
-    border: 1px solid #ddd;
-    width: 50%;
-}
-
 
 /* ********************************************** */
 /* ******************************* BLOGS Page */
