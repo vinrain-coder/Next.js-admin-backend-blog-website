@@ -584,7 +584,6 @@ button {
 .blogscategory {
     width: 100%;
     height: 100%;
-    overflow-y: auto;
 }
 
 .blogscategory table {
@@ -607,7 +606,7 @@ button {
     font-size: 1.3rem;
 }
 
-.blogscategory tbody tr {
+.blogscategory tbody {
     overflow-y: auto;
 }
 
