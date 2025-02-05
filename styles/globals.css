@@ -584,11 +584,14 @@ button {
 .blogscategory {
     width: 100%;
     height: 100%;
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .blogscategory table {
     width: 100%;
     color: #000;
+    border-collapse: collapse;
 }
 
 .blogscategory thead tr {
@@ -597,20 +600,29 @@ button {
     font-weight: 900;
 }
 
-
+.blogscategory th,
 .blogscategory td {
     list-style: auto;
     padding: 1rem;
     font-size: 1.3rem;
-}
-
-.blogscategory tbody {
-    overflow-y: scroll;
+    border: 1px solid #ddd;
 }
 
 .blogscategory tbody tr:hover {
     background-color: #e3e3e3;
 }
+
+.blogscategory tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.blogscategory th,
+.blogscategory td {
+    width: 50%;
+}
+
 
 /* ********************************************** */
 /* ******************************* BLOGS Page */
